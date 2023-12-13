@@ -1,23 +1,24 @@
 package com.ryanlou.springmall.service.impl;
 
+import com.ryanlou.springmall.constant.ProductCategory;
 import com.ryanlou.springmall.dao.ProductDao;
 import com.ryanlou.springmall.dto.ProductRequest;
 import com.ryanlou.springmall.model.Product;
 import com.ryanlou.springmall.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 
 @Service
 public class ProductServiceImpl implements ProductService {
+
     @Autowired
     private ProductDao productDao;
 
     @Override
-    public List<Product> getProducts() {
-        return productDao.getProducts();
+    public List<Product> getProducts(ProductCategory category,String search) {
+        return productDao.getProducts(category, search);
     }
 
     @Override
