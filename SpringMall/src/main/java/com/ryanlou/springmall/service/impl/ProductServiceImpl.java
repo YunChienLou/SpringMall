@@ -2,6 +2,7 @@ package com.ryanlou.springmall.service.impl;
 
 import com.ryanlou.springmall.constant.ProductCategory;
 import com.ryanlou.springmall.dao.ProductDao;
+import com.ryanlou.springmall.dto.ProductQueryParam;
 import com.ryanlou.springmall.dto.ProductRequest;
 import com.ryanlou.springmall.model.Product;
 import com.ryanlou.springmall.service.ProductService;
@@ -17,8 +18,8 @@ public class ProductServiceImpl implements ProductService {
     private ProductDao productDao;
 
     @Override
-    public List<Product> getProducts(ProductCategory category,String search) {
-        return productDao.getProducts(category, search);
+    public List<Product> getProducts(ProductQueryParam productQueryParam) {
+        return productDao.getProducts(productQueryParam);
     }
 
     @Override
