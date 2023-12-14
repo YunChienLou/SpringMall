@@ -10,6 +10,9 @@ import java.util.List;
 public interface ProductService {
 
     List<Product> getProducts(ProductQueryParam productQueryParam);
+
+    Integer countProduct(ProductQueryParam productQueryParam);
+
     Product getProductById(Integer productId);
 
     Integer createProduct(ProductRequest productRequest);
