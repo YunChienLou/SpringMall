@@ -1,6 +1,7 @@
 package com.ryanlou.springmall.service.impl;
 
 import com.ryanlou.springmall.dao.UserDao;
+import com.ryanlou.springmall.dto.UserLoginRequest;
 import com.ryanlou.springmall.dto.UserRegisterRequest;
 import com.ryanlou.springmall.model.User;
 import com.ryanlou.springmall.service.UserService;
@@ -37,5 +38,21 @@ public class UserServiceImpl implements UserService {
 
 
         return userDao.getUserById(userId);
+    }
+
+    @Override
+    public User login(UserLoginRequest userLoginRequest) {
+        User user = userDao.getUserByEmail(userLoginRequest.getEmail());
+        if(user == null){
+            log.warn("該email {} 尚未註冊" , userLoginRequest.getEmail());
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+        }
+
+        if (user.getPassword().equals(userLoginRequest.getPassword())){
+            return user;
+        }else {
+            log.warn("email {} 密碼不正確", userLoginRequest.getEmail());
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
+        }
     }
 }
