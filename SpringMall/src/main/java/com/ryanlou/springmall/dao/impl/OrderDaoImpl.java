@@ -1,10 +1,14 @@
 package com.ryanlou.springmall.dao.impl;
 
 import com.ryanlou.springmall.dao.OrderDao;
+import com.ryanlou.springmall.dto.OrderQueryParam;
+import com.ryanlou.springmall.dto.ProductQueryParam;
 import com.ryanlou.springmall.model.Order;
 import com.ryanlou.springmall.model.OrderItem;
+import com.ryanlou.springmall.model.Product;
 import com.ryanlou.springmall.rowmapper.OrderItemRowMapper;
 import com.ryanlou.springmall.rowmapper.OrderRowMapper;
+import com.ryanlou.springmall.rowmapper.ProductRowmapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -91,5 +95,49 @@ public class OrderDaoImpl implements OrderDao {
         map.put("orderId" , orderId);
 
         return namedParameterJdbcTemplate.query(sql , map , new OrderItemRowMapper());
+    }
+
+    @Override
+    public List<Order> getOrders(OrderQueryParam orderQueryParam) {
+        String sql = "SELECT order_id , user_id, total_amount , created_date , last_modified_date FROM `order` WHERE 1=1";
+
+        Map<String , Object>map = new HashMap<>();
+        // 使sql可以拼接
+        sql = addFilteringSql(sql , map , orderQueryParam);
+
+        //排序
+        sql = sql + " ORDER BY created_date DESC";
+
+        //分頁
+        sql = sql + " LIMIT :limit OFFSET :offset";
+        map.put("limit" , orderQueryParam.getLimit());
+        map.put("offset" , orderQueryParam.getOffset());
+
+        List<Order> orderList = namedParameterJdbcTemplate.query(sql , map , new OrderRowMapper());
+        return orderList;
+    }
+
+    @Override
+    public Integer countOrder(OrderQueryParam orderQueryParam) {
+
+        String sql = "SELECT count(*) FROM `order` WHERE 1=1";
+        Map<String , Object>map = new HashMap<>();
+
+        sql = addFilteringSql(sql , map , orderQueryParam);
+
+        Integer total = namedParameterJdbcTemplate.queryForObject(sql,map, Integer.class);
+
+        return total;
+
+    }
+
+    private  String addFilteringSql(String sql , Map<String , Object> map, OrderQueryParam orderQueryParam){
+
+        if(orderQueryParam.getUserId() != null){
+            sql = sql + " AND user_id = :userId";
+            map.put("userId" , orderQueryParam.getUserId());
+        }
+
+        return sql;
     }
 }
