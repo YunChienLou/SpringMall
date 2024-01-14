@@ -45,7 +45,24 @@ public class JwtService {
                 .setClaims(extractClaims)
                 .setSubject(userDetails.getUsername())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 5 ))
+                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 10 )) // 10 分鐘
+                .signWith(getSignKey(), SignatureAlgorithm.HS256)
+                .compact();
+    }
+
+    public String generateRefreshToken (UserDetails userDetails){
+        return generateRefreshToken(new HashMap<>() , userDetails);
+    }
+
+    public String generateRefreshToken (
+            Map<String , Object> extractClaims,
+            UserDetails userDetails
+    ){
+        return Jwts.builder()
+                .setClaims(extractClaims)
+                .setSubject(userDetails.getUsername())
+                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 30)) // 30 分鐘
                 .signWith(getSignKey(), SignatureAlgorithm.HS256)
                 .compact();
     }

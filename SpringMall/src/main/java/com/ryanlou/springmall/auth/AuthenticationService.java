@@ -35,8 +35,9 @@ public class AuthenticationService {
         User user = userService.getUserById(userId);
 
         var jwtToken = jwtService.generateToken(user);
+        var refToken = jwtService.generateRefreshToken(user);
 
-        return AuthenticationResponse.builder().token(jwtToken).build();
+        return AuthenticationResponse.builder().token(jwtToken).refreshToken(refToken).build();
     }
 
     public AuthenticationResponse authenticate(AuthenticationRequest authenticationRequest) {
@@ -49,6 +50,7 @@ public class AuthenticationService {
         var user = userService.getUserByEmail(authenticationRequest.getEmail());
 
         var jwtToken = jwtService.generateToken(user);
-        return AuthenticationResponse.builder().token(jwtToken).build();
+        var refToken = jwtService.generateRefreshToken(user);
+        return AuthenticationResponse.builder().token(jwtToken).refreshToken(refToken).build();
     }
 }
