@@ -1,5 +1,6 @@
 package com.ryanlou.springmall.rowmapper;
 
+import com.ryanlou.springmall.constant.Role;
 import com.ryanlou.springmall.model.User;
 import org.springframework.jdbc.core.RowMapper;
 
@@ -17,6 +18,11 @@ public class UserRowmapper implements RowMapper<User> {
         user.setPassword(rs.getString("password"));
         user.setCreateDate(rs.getTimestamp("created_date"));
         user.setLastModifiedData(rs.getTimestamp("last_modified_date"));
+
+        //        string 轉 enum
+        String roleStr = rs.getString("role");
+        Role role = Role.valueOf(roleStr);
+        user.setRole(role);
 
         return user;
     }

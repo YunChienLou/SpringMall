@@ -1,6 +1,5 @@
 package com.ryanlou.springmall.service;
 
-import com.ryanlou.springmall.constant.ProductCategory;
 import com.ryanlou.springmall.dto.ProductQueryParam;
 import com.ryanlou.springmall.dto.ProductRequest;
 import com.ryanlou.springmall.model.Product;

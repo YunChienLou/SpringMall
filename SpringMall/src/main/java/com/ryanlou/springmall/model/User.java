@@ -2,10 +2,24 @@ package com.ryanlou.springmall.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.ryanlou.springmall.constant.Role;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.Collection;
 import java.util.Date;
+import java.util.List;
 
-public class User {
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class User implements UserDetails {
 
 
     private Integer userId;
@@ -20,43 +34,39 @@ public class User {
 
     private Date lastModifiedData;
 
-    public Integer getUserId() {
-        return userId;
+    private Role role;
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+//        System.out.println(role);
+        return List.of(new SimpleGrantedAuthority(role.name()));
     }
 
-    public void setUserId(Integer userId) {
-        this.userId = userId;
-    }
-
-    public String getEmail() {
+    @Override
+    public String getUsername() {
         return email;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
     }
 
-    public String getPassword() {
-        return password;
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
     }
 
-    public Date getCreateDate() {
-        return createDate;
+    @Override
+    public boolean isEnabled() {
+        return true ;
     }
 
-    public void setCreateDate(Date createDate) {
-        this.createDate = createDate;
-    }
 
-    public Date getLastModifiedData() {
-        return lastModifiedData;
-    }
 
-    public void setLastModifiedData(Date lastModifiedData) {
-        this.lastModifiedData = lastModifiedData;
-    }
 }

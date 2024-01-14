@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.util.DigestUtils;
 import org.springframework.web.server.ResponseStatusException;
@@ -32,7 +33,7 @@ public class UserServiceImpl implements UserService {
         }
 
         //Hash 加密
-        String hashedPassword = DigestUtils.md5DigestAsHex(userRegisterRequest.getPassword().getBytes());
+        String hashedPassword = new BCryptPasswordEncoder().encode(userRegisterRequest.getPassword());
         //替換雜湊值
         userRegisterRequest.setPassword(hashedPassword);
 
@@ -42,9 +43,12 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User getUserById(Integer userId) {
-
-
         return userDao.getUserById(userId);
+    }
+
+    @Override
+    public User getUserByEmail(String email) {
+        return userDao.getUserByEmail(email);
     }
 
     @Override
@@ -57,7 +61,7 @@ public class UserServiceImpl implements UserService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST);
         }
         //Md5 hash 加密
-        String hashedPassword = DigestUtils.md5DigestAsHex(userLoginRequest.getPassword().getBytes());
+        String hashedPassword = new BCryptPasswordEncoder().encode(userLoginRequest.getPassword());
 
         //比較密碼
         if (user.getPassword().equals(hashedPassword)){
